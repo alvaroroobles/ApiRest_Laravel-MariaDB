@@ -3,10 +3,15 @@ services:
     build: .
     ports:
       - "8080:80"
-    # volumes:
-    #   - .:/var/www/html
     depends_on:
       - db
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=laravel_db
+      - DB_USERNAME=alvaroadmin
+      - DB_PASSWORD=1234
+    command: ["apache2-foreground"] 
+    entrypoint: ["/docker-entrypoint.sh"]
 
   db:
     image: mariadb:10.6

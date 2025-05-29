@@ -1,58 +1,68 @@
+# Usar una imagen base de PHP con Apache
 FROM php:8.2-apache
 
-# Instala extensiones necesarias de PHP
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring exif bcmath
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev \
+    default-mysql-client \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Activa mod_rewrite para Laravel
+# Habilitar mod_rewrite de Apache
 RUN a2enmod rewrite
 
-# Copia Composer desde la imagen oficial
+# Configurar el DocumentRoot de Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Establece el directorio de trabajo
+# Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copia los archivos del proyecto al contenedor
-COPY . /var/www/html
+# Copiar archivos de dependencias
+COPY composer.json composer.lock ./
 
-# Instala dependencias de Laravel
-RUN composer install --no-dev --optimize-autoloader
+# Instalar dependencias de PHP
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Crear archivo .env desde .env.example
-RUN cp .env.example .env
+# Copiar el código de la aplicación
+COPY . .
 
-# Generar APP_KEY
-RUN php artisan key:generate
+# Copiar el script de entrada
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
-# Limpiar caché de Laravel
-RUN php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan view:clear && \
-    php artisan route:clear
+# Configurar permisos
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Establece permisos adecuados
-RUN chmod -R 755 /var/www/html \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+# Crear el archivo .env si no existe (copia desde .env.example)
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# Cambia el DocumentRoot a public/
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+# Generar clave de aplicación
+RUN php artisan key:generate --force
 
-# Permite .htaccess en public/
-RUN echo '<Directory /var/www/html/public>' >> /etc/apache2/apache2.conf \
-    && echo '    Options Indexes FollowSymLinks' >> /etc/apache2/apache2.conf \
-    && echo '    AllowOverride All' >> /etc/apache2/apache2.conf \
-    && echo '    Require all granted' >> /etc/apache2/apache2.conf \
-    && echo '</Directory>' >> /etc/apache2/apache2.conf
+# ELIMINAR/COMENTAR estos comandos que causan el error:
+# RUN php artisan config:clear && \
+#     php artisan cache:clear && \
+#     php artisan view:clear && \
+#     php artisan route:clear
 
-# Configurar ServerName para evitar warnings de Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Expone el puerto 80
+# Exponer puerto 80
 EXPOSE 80
 
-# Comando de arranque del contenedor
+# Configurar el punto de entrada
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Comando por defecto
 CMD ["apache2-foreground"]
