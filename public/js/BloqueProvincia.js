@@ -2,7 +2,7 @@ export class BloqueProvincia {
   constructor(config) {
     // Creo la sección con createElement y añadir dos clases para estilos
     const section = document.createElement("section");
-    section.className = "w-container form"; // <-- aquí la clase 'form'
+    section.className = "w-container form"; 
 
     section.innerHTML = `
       <label for="${config.input}">${config.nombre}</label>
