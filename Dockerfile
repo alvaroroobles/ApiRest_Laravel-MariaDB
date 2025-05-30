@@ -52,11 +52,6 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi
 # Generar clave de aplicación
 RUN php artisan key:generate --force
 
-# ELIMINAR/COMENTAR estos comandos que causan el error:
-# RUN php artisan config:clear && \
-#     php artisan cache:clear && \
-#     php artisan view:clear && \
-#     php artisan route:clear
 
 # Exponer puerto 80
 EXPOSE 80
