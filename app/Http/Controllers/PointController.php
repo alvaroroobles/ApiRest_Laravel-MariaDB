@@ -18,7 +18,7 @@ class PointController extends Controller
             $url = "https://nominatim.openstreetmap.org/reverse";
 
             $response = Http::withHeaders([
-                'User-Agent' => 'TuAppNombre/1.0 (tuemail@dominio.com)'
+                'User-Agent' => 'proyectoTrevenque/1.0 (alvaro@proyectoTrevenque.com)'
             ])->get($url, [
                 'lat' => $lat,
                 'lon' => $lon,
