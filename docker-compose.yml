@@ -3,10 +3,16 @@ services:
     build: .
     ports:
       - "8080:80"
-    # volumes:
-    #   - .:/var/www/html
     depends_on:
       - db
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=laravel_db
+      - DB_USERNAME=alvaroadmin
+      - DB_PASSWORD=1234
+      - AEMET_API_KEY=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbHZhcm8uYmVjZXJyaWwucm9ibGVzQGdtYWlsLmNvbSIsImp0aSI6ImE3OGVkY2ZjLTg4ZWQtNDVmMS05MDMzLTI2MWFiOGI1MDI0NCIsImlzcyI6IkFFTUVUIiwiaWF0IjoxNzQ3NjUwMTI0LCJ1c2VySWQiOiJhNzhlZGNmYy04OGVkLTQ1ZjEtOTAzMy0yNjFhYjhiNTAyNDQiLCJyb2xlIjoiIn0.Wa0OJVyCu6kt_SfqYpQSzakx1FkCUsrJ7SHbrhXRghQ
+    command: ["apache2-foreground"] 
+    entrypoint: ["/docker-entrypoint.sh"]
 
   db:
     image: mariadb:10.6
