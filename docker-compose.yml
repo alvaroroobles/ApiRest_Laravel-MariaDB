@@ -1,5 +1,6 @@
 services:
   app:
+    #Construyo la imagen a partir del Dockerfile
     build: .
     ports:
       - "8080:80"
