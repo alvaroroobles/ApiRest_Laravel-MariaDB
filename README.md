@@ -36,5 +36,6 @@ La API estará disponible en [http://localhost:8000](http://localhost:8000).
 - `public/` - Archivos públicos (CSS, JS, imágenes).
 - `database/` - Migraciones y seeds.
 - `Dockerfile` y `docker-compose.yml` - Archivos de configuración para Docker.
+- `Peticiones POST` - Los puntos clicados en el mapa se almacenan en la tabla points
 
 Hecho por [alvaroroobles](https://github.com/alvaroroobles)
