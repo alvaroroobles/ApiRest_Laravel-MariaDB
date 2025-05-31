@@ -19,7 +19,7 @@ Este proyecto es una API RESTful desarrollada con Laravel y una base de datos Ma
    cd ApiRest_Laravel-MariaDB
    ```
 2. **Ejecutar con Docker:**
-   Si prefieres usar Docker, puedes construir y levantar los servicios con:
+   Puedes construir y levantar los servicios con:
    ```bash
    docker-compose up --build
    ```
