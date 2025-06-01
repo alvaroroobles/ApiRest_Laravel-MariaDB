@@ -21,7 +21,7 @@ Este proyecto es una API RESTful desarrollada con Laravel y una base de datos Ma
 2. **Ejecutar con Docker:**
    Puedes construir y levantar los servicios con:
    ```bash
-   docker-compose up --build
+   docker compose up --build -d
    ```
 
 ## Uso
