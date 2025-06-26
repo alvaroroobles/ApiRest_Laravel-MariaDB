@@ -11,7 +11,7 @@ services:
       - DB_DATABASE=laravel_db
       - DB_USERNAME=alvaroadmin
       - DB_PASSWORD=1234
-      - AEMET_API_KEY=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbHZhcm8uYmVjZXJyaWwucm9ibGVzQGdtYWlsLmNvbSIsImp0aSI6ImE3OGVkY2ZjLTg4ZWQtNDVmMS05MDMzLTI2MWFiOGI1MDI0NCIsImlzcyI6IkFFTUVUIiwiaWF0IjoxNzQ3NjUwMTI0LCJ1c2VySWQiOiJhNzhlZGNmYy04OGVkLTQ1ZjEtOTAzMy0yNjFhYjhiNTAyNDQiLCJyb2xlIjoiIn0.Wa0OJVyCu6kt_SfqYpQSzakx1FkCUsrJ7SHbrhXRghQ
+      - AEMET_API_KEY=#Tu API KEY de la AEMET
     command: ["apache2-foreground"] 
     entrypoint: ["/docker-entrypoint.sh"]
 
